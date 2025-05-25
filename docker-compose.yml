@@ -1,0 +1,54 @@
+
+services:
+  # CDN App Service
+  cdn:
+    build: .
+    depends_on:
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - PORT=3000
+      - NODE_ENV=production
+      # For external S3 provider, set these via .env or environment
+      # - AWS_REGION=${AWS_REGION}
+      # - BUCKET=${BUCKET}
+      # For MinIO, override these as shown below
+      - AWS_REGION=us-east-1
+      - BUCKET=cdn-bucket
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - S3_ENDPOINT=http://minio:9000
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    # Uncomment the following if using MinIO
+    depends_on:
+       - minio
+
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  # MinIO Service (for local S3-compatible storage)
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+    # Uncomment to use MinIO as your S3 provider
+    Set AWS_REGION, BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_ENDPOINT in the cdn service
+
+volumes:
+  redis-data:
+  minio-data: 

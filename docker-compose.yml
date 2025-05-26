@@ -1,3 +1,4 @@
+version: '3.8'
 
 services:
   # CDN App Service
@@ -5,6 +6,7 @@ services:
     build: .
     depends_on:
       - redis
+      - minio
     environment:
       - REDIS_URL=redis://redis:6379
       - PORT=3000
@@ -22,9 +24,6 @@ services:
       - "3000:3000"
     volumes:
       - .:/app
-    # Uncomment the following if using MinIO
-    depends_on:
-       - minio
 
   # Redis Service
   redis:
@@ -47,7 +46,7 @@ services:
     volumes:
       - minio-data:/data
     # Uncomment to use MinIO as your S3 provider
-    Set AWS_REGION, BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_ENDPOINT in the cdn service
+    # Set AWS_REGION, BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and S3_ENDPOINT in the cdn service
 
 volumes:
   redis-data:

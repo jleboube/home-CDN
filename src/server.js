@@ -32,7 +32,7 @@ app.use(
 
 // ↳ Generic rate limiting for the image endpoint
 const imageLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000, // 15  utes
   limit: 1000, // Limit each IP to 1000 requests per windowMs
   standardHeaders: 'draft-7', // Use RateLimit-* headers
   legacyHeaders: false, // Disable X-RateLimit-* headers

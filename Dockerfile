@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package files and install dependencies
 COPY package*.json ./
 # Use --omit=dev for production builds to reduce image size
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm install --omit=dev && npm cache clean --force
 
 # Copy the rest of the application code
 COPY . .
